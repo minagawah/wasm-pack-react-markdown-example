@@ -1,7 +1,7 @@
 {
   "name": "wasm-pack-react-markdown-example",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "description": "Use wasm-pack to handle markdown in React app",
   "main": "index.js",
   "scripts": {
