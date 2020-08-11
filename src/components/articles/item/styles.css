@@ -1,0 +1,7 @@
+.item {
+    margin-top: 0.6em;
+    padding: 0.4em 1.4em;
+    min-width: 320px;
+    max-width: 1024px;
+    background-color: #efefef;
+}

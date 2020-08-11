@@ -1,0 +1,59 @@
+{
+  "name": "wasm-pack-react-markdown-example",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Use wasm-pack to handle markdown in React app",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build:wasm": "sh ./build.sh markdown-wasm --release",
+    "build:react": "react-app-rewired build",
+    "build": "$npm_execpath build:wasm && $npm_execpath build:react",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "repository": "https://github.com/minagawah/wasm-pack-react-markdown-example.git",
+  "homepage": "",
+  "keywords": [
+    "react",
+    "wasm-pack",
+    "wasm-loader",
+    "markdown"
+  ],
+  "author": "Hiroki Minagawa <minagawa@tokyo800.jp>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/minagawah/wasm-pack-react-markdown-example/issues"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "react-wasm-bridge": "https://github.com/SpiderOak/react-wasm-bridge"
+  },
+  "devDependencies": {
+    "@open-wc/webpack-import-meta-loader": "^0.4.7",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.1.6",
+    "wasm-loader": "^1.3.0"
+  }
+}

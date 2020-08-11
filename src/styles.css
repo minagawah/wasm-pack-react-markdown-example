@@ -1,0 +1,61 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                 sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+                 monospace;
+}
+
+a, a:link, a:hover, a:active, a:visited {
+    color: #0080ff;
+}
+
+header {
+    background-color: #282c34;
+    min-height: 65px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.1em;
+    color: #fff;
+}
+
+header a, header a:link, header a:hover, header a:active, header a:visited {
+    margin-left: 0.6em;
+    color: #fff;
+}
+
+.app {
+    color: #303030;
+}
+
+.logo {
+    height: 40px;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .logo {
+        animation: logo-spin infinite 20s linear;
+    }
+}
+
+.container {
+    padding: 0.8em;
+}
+
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
