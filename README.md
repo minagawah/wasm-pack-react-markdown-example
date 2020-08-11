@@ -20,13 +20,10 @@ Use wasm-pack to handle markdown in React app
 We have a few issues using WASM....
 
 - We want to run **multiple WASM apps in an existing client app.**
-- Mounting WASM to a static page is easy, but there are occasions you want to **dynamically import WASM files.**  
-(like when you are woking with React apps)
+- Mounting WASM to a static page is easy, but there are occasions you want to **dynamically import WASM files** (like when you are woking with React apps)
 - Sometimes, **you don't want your WASM app to render HTML** but want it to **simply process data being passed.**
-- [wasm-pack-plugin](https://github.com/wasm-tool/wasm-pack-plugin) is nice when working with Webpack, but **it does not allow us more than one WASM app per project.**  
-(you could, but it can get messy)
-- When dealing with DOM elements, [yew](https://yew.rs/docs/) makes your life easier, but **it requires a DOM element to exist when it is loaded.**  
-(so it ultimately becomes a choice of Yew or React for managing DOM elements)
+- [wasm-pack-plugin](https://github.com/wasm-tool/wasm-pack-plugin) is nice when working with Webpack, but **it does not allow us more than one WASM app per project** (you could, but it can get messy)
+- When dealing with DOM elements, [yew](https://yew.rs/docs/) makes your life easier, but **it requires a DOM element to exist when it is loaded** (so it ultimately becomes a choice of Yew or React for managing DOM elements)
 
 so, here are the achievements...
 
