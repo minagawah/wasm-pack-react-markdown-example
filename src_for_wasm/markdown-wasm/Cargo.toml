@@ -1,7 +1,7 @@
 [package]
 name = "markdown-wasm"
 version = "0.1.0"
-authors = ["Hiroki Minagawa <mina@tokyo800.jp>"]
+authors = ["Hiroki Minagawa <minagawa@tokyo800.jp>"]
 edition = "2018"
 
 [lib]
