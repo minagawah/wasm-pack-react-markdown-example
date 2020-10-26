@@ -1,7 +1,11 @@
-const { override, overrideDevServer } = require('customize-cra');
 const path = require('path');
+const {
+  override,
+  overrideDevServer,
+  addExternalBabelPlugin,
+} = require('customize-cra');
 
-const wasmDir = path.resolve(__dirname, 'wasm');
+const wasmOutDir = path.resolve(__dirname, 'wasm');
 
 // https://github.com/webpack/webpack-dev-middleware/issues/229#issuecomment-418202278
 const devServerConfig = config => ({
@@ -28,7 +32,8 @@ const devServerConfig = config => ({
 const addWasmHandler = config => {
   config.resolve.extensions.push('.wasm');
 
-  // Exclude from `file-loader`
+  // Exclude from `file-loader`.
+  // Though, this is not needed if you are NOT using CRA.
   config.module.rules.forEach(rule => {
     (rule.oneOf || []).forEach(o => {
       if (o.loader && o.loader.indexOf('file-loader') >= 0) {
@@ -39,30 +44,33 @@ const addWasmHandler = config => {
   
   config.module.rules.push({
     test: /\.wasm$/,
+    include: wasmOutDir,
     use: [{
       loader: require.resolve('wasm-loader'),
     }],
-    include: wasmDir,
-  });
-  
-  // Support for `import.meta` syntax.
-  config.module.rules.push({
-    test: /\.js$/,
-    use: [{
-      loader: require.resolve('@open-wc/webpack-import-meta-loader'),
-    }],
-    include: wasmDir,
   });
   
   return config;
 };
 
+
 module.exports = {
   webpack: override(
-    addWasmHandler
+    addWasmHandler,
+    addExternalBabelPlugin([
+      'babel-plugin-bundled-import-meta',
+      {
+        // You need to specify "bundleDir"
+        // if your built WASM directory
+        // is different from your bundle directory.
+        // --------------------------------------------------
+        // bundleDir: [PUBLIC_PATH_TO_YOUR_BUILT_WASM_DIRECTORY]
+        // --------------------------------------------------
+        importStyle: 'cjs',
+      }
+    ]),
   ),
   devServer: overrideDevServer(
     devServerConfig
   ),
-};
-
+}

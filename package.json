@@ -1,11 +1,11 @@
 {
   "name": "wasm-pack-react-markdown-example",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "description": "Use wasm-pack to handle markdown in React app",
   "main": "index.js",
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "BROWSER=none react-app-rewired start",
     "build:wasm": "sh ./build.sh markdown-wasm --release",
     "build:react": "react-app-rewired build",
     "build": "$npm_execpath build:wasm && $npm_execpath build:react",
@@ -51,7 +51,7 @@
     "react-wasm-bridge": "https://github.com/SpiderOak/react-wasm-bridge"
   },
   "devDependencies": {
-    "@open-wc/webpack-import-meta-loader": "^0.4.7",
+    "babel-plugin-bundled-import-meta": "^0.3.2",
     "customize-cra": "^1.0.0",
     "react-app-rewired": "^2.1.6",
     "wasm-loader": "^1.3.0"

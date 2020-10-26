@@ -2,6 +2,9 @@
 
 Use wasm-pack to handle markdown in React app
 
+[Updated] 2020.10.26  
+Using `babel-plugin-bundled-import-meta` instead of `@open-wc/webpack-import-meta-loader`.
+
 [1. About](#about)  
 [2. Install & Run](#dev)  
 [3. What I Did](#what)  
@@ -117,10 +120,9 @@ These are the essential tricks...
 
 - MIME type `application/wasm` for `*.wasm`
 - `--target web` when building with [wasm-pack](https://github.com/rustwasm/wasm-pack)
-- `yarn link` so that React can lookup the WASM module
+- `yarn link` so that React can lookup the WASM module.
 - Using [wasm-loader](https://github.com/ballercat/wasm-loader) to load `*.wasm` files
-- Use of [@open-wc/webpack-import-meta-loader](https://github.com/open-wc/open-wc/tree/master/packages/webpack-import-meta-loader) to support `import.meta` syntax
-
+- Use of [babel-plugin-bundled-import-meta](https://github.com/cfware/babel-plugin-bundled-import-meta) to support `import.meta` syntax.
 
 
 <a id="what-actual-work"></a>
@@ -142,11 +144,42 @@ yarn add react-router-dom
 ```shell
 yarn add react-app-rewired customize-cra --dev
 ```
-For `*.wasm` files, instead of `file-loader`, we are using [wasm-loader](https://github.com/ballercat/wasm-loader):
+
+Here, I show you what configured in `config-overrides.js`.  
+It is quite long... yes.  
+I will explain later what it means for each.
 
 `config-overrides.js`  
 ```js
-  // Exclude from `file-loader`
+const wasmOutDir = path.resolve(__dirname, 'wasm');
+
+// https://github.com/webpack/webpack-dev-middleware/issues/229#issuecomment-418202278
+const devServerConfig = config => ({
+  ...config,
+  before: app => {
+    app.get('*.wasm', (req, res, next) => {
+      const options = {
+        root: path.resolve(__dirname),
+        dotfiles: 'deny',
+        headers: {
+          'Content-Type': 'application/wasm',
+        },
+      };
+      res.sendFile(req.url, options, err => {
+        if (err) {
+          console.warn(err);
+          next(err);
+        }
+      });
+    });
+  },
+});
+  
+const addWasmHandler = config => {
+  config.resolve.extensions.push('.wasm');
+
+  // Exclude from `file-loader`.
+  // Though, this is not needed if you are NOT using CRA.
   config.module.rules.forEach(rule => {
     (rule.oneOf || []).forEach(o => {
       if (o.loader && o.loader.indexOf('file-loader') >= 0) {
@@ -157,12 +190,96 @@ For `*.wasm` files, instead of `file-loader`, we are using [wasm-loader](https:/
   
   config.module.rules.push({
     test: /\.wasm$/,
+    include: wasmOutDir,
     use: [{
       loader: require.resolve('wasm-loader'),
     }],
-    include: wasmDir,
   });
+  
+  return config;
+};
+
+
+module.exports = {
+  webpack: override(
+    addWasmHandler,
+    addExternalBabelPlugin([
+      'babel-plugin-bundled-import-meta',
+      {
+        // You need to specify "bundleDir"
+        // if your built WASM directory
+        // is different from your bundle directory.
+        // --------------------------------------------------
+        // bundleDir: [PUBLIC_PATH_TO_YOUR_BUILT_WASM_DIRECTORY]
+        // --------------------------------------------------
+        importStyle: 'cjs',
+      }
+    ]),
+  ),
+  devServer: overrideDevServer(
+    devServerConfig
+  ),
+}
 ```
+
+So, that was quite a bit.
+
+Here, with `config-overrides.js`, we are doing 3 things.
+
+
+##### (a) "addWasmHandler": Using `wasm-loader`
+
+For `*.wasm` files, instead of `file-loader`, we are using [wasm-loader](https://github.com/ballercat/wasm-loader).  
+`addWasmHandler` simply alter the loader configuration.  
+(if you are NOT using CRA, you don't need the exclusion for `file-loader`).
+
+
+
+##### (b) "devServerConfig": `application/wasm` MIME Type
+
+Once again, we we take at one of the WASM files, we see the following:
+
+`wasm/markdown-wasm/wasm.js`  
+```js
+if (typeof WebAssembly.instantiateStreaming === 'function') {
+    try {
+        return await WebAssembly.instantiateStreaming(module, imports);
+    } catch (e) {
+        if (module.headers.get('Content-Type') != 'application/wasm') {
+            console.warn("`WebAssembly.instantiateStreaming` failed
+because your server does not serve wasm with `application/wasm` MIME type.
+Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
+        } else {
+            throw e;
+        }
+    }
+}
+```
+it says that we need a special MIME type `application/wasm` to serve `*.wasm` files.
+So, with `addWasmHandler`, we are overriding `devServer` config.
+
+
+##### (c) "addExternalBabelPlugin": Resolving `import.meta` Syntax
+
+If you take a look at one of our WASM files, we have the following:
+
+`wasm/markdown-wasm/wasm.js`  
+```js
+if (typeof input === 'undefined') {
+    input = import.meta.url.replace(/\.js$/, '_bg.wasm');
+}
+```
+where `import.meta` is a syntax which Webpack has a trouble understanding.
+So, I need a corresponding polyfill.
+```
+yarn add --dev babel-plugin-bundled-import-meta
+```
+We are using `addExternalBabelPlugin` to configure Babel to handle `import.meta`.  
+(as it says in the comments, use `bundleDir` if you serve WASM in different directory)
+
+
+
+
 
 #### [Step 3] Creating WASM Source Directory (`src_for_wasm`)
 
@@ -227,84 +344,8 @@ cd src
 yarn link "markdown-wasm"
 ```
 
-#### [Step 7] Resolving `import.meta` Syntax
 
-If you take a look at one of our WASM files, we have the following:
-
-`wasm/markdown-wasm/wasm.js`  
-```js
-if (typeof input === 'undefined') {
-    input = import.meta.url.replace(/\.js$/, '_bg.wasm');
-}
-```
-where `import.meta` is a syntax which Webpack has a trouble understanding.
-So, I need a corresponding polyfill.
-```
-yarn add @open-wc/webpack-import-meta-loader --dev
-```
-and make sure to override the Webpack rule for `*.js` under WASM build directory:
-
-`config-overrides.js`
-```js
-// Support for `import.meta` syntax.
-config.module.rules.push({
-  test: /\.js$/,
-  use: [{
-    loader: require.resolve('@open-wc/webpack-import-meta-loader'),
-  }],
-  include: wasmDir,
-});
-```
-
-#### [Step 8] `application/wasm` MIME Type
-
-Once again, we we take at one of the WASM files, we see the following:
-
-`wasm/markdown-wasm/wasm.js`  
-```js
-if (typeof WebAssembly.instantiateStreaming === 'function') {
-    try {
-        return await WebAssembly.instantiateStreaming(module, imports);
-    } catch (e) {
-        if (module.headers.get('Content-Type') != 'application/wasm') {
-            console.warn("`WebAssembly.instantiateStreaming` failed
-because your server does not serve wasm with `application/wasm` MIME type.
-Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
-        } else {
-            throw e;
-        }
-    }
-}
-```
-it says that we need a special MIME type `application/wasm` to serve `*.wasm` files.
-So, I need to tweek `config-overrides.js` to override `devServer`.
-
-`config-overrides.js`
-```js
-// https://github.com/webpack/webpack-dev-middleware/issues/229#issuecomment-418202278
-const devServerConfig = config => ({
-  ...config,
-  before: app => {
-    app.get('*.wasm', (req, res, next) => {
-      const options = {
-        root: path.resolve(__dirname),
-        dotfiles: 'deny',
-        headers: {
-          'Content-Type': 'application/wasm',
-        },
-      };
-      res.sendFile(req.url, options, err => {
-        if (err) {
-          console.warn(err);
-          next(err);
-        }
-      });
-    });
-  },
-});
-```
-
-#### [Step 9] Dynamically Import WASM Module
+#### [Step 7] Dynamically Import WASM Module
 
 Since `build.sh` script runs `wasm-pack build` with `--target web` option,
 I can asynchronously load my WASM module easily.
