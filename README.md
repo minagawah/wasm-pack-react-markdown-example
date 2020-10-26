@@ -2,20 +2,23 @@
 
 Use wasm-pack to handle markdown in React app
 
-[Updated] 2020.10.26  
-Using `babel-plugin-bundled-import-meta` instead of `@open-wc/webpack-import-meta-loader`.
-
 [1. About](#about)  
-[2. Install & Run](#dev)  
-[3. What I Did](#what)  
-&nbsp; [3-1. Tricks](#what-tricks)  
-&nbsp; [3-2. Actual Work](#what-actual-work)  
+[2. What I Did](#what)  
+&nbsp; [2-1. Tricks](#what-tricks)  
+&nbsp; [2-2. Actual Work](#what-actual-work)  
+[3. Development](#dev)  
+&nbsp; [3-1. Install](#dev-install)  
+&nbsp; [3-2. Run](#dev-run)  
 [4. LICENSE](#license)  
 
 *See bellow where texts in markdown are converted to HTML contents*
 
 ![screenshot](screenshot.jpg "Screenshot")
 
+
+**Updates**  
+2020.10.26  
+- Using `babel-plugin-bundled-import-meta` to replace `@open-wc/webpack-import-meta-loader`
 
 <a id="about"></a>
 ## 1. About
@@ -36,85 +39,18 @@ so, here are the achievements...
 - The module **simply takes data, returns processed data.** Not messing with HTML rendering.
 
 To illustrate the use, I made a WASM module, called `markdown-wasm`.  
-This is just a wrapper of [comrak](https://crates.io/crates/comrak). When given markdown texts are given, it converts them to HTML (in strings).
+This is just a wrapper of [comrak](https://crates.io/crates/comrak).  
+When markdown texts are given, it converts them to HTML (in strings).
 
-
-
-
-<a id="dev"></a>
-## 2. Install & Run
-
-**IMPORTANT: When you install, you need to build the WASM, and create a yarn link.**
-
-<a id="dev-install"></a>
-### 2-1. Install
-
-(1) You first need to `yarn install`.
-
-```shell
-> git clone https://github.com/minagawah/wasm-pack-react-markdown-example.git
-> cd wasm-pack-react-markdown-example
-> yarn install
-```
-
-(2) Then, **you need to build the WASM.**
-
-```shell
-> yarn build:wasm
-```
-
-the above simply runs `sh ./build.sh markdown-wasm`
-
-
-(3) Finally, **you need to create a symlink (yarn link).**
-
-```shell
-# First, create a yarn link in the built directory.
-> cd wasm/markdown-wasm
-> yarn link
-
-yarn link v1.22.5
-warning package.json: No license field
-warning package.json: No license field
-success Registered "markdown-wasm".
-info You can now run `yarn link "markdown-wasm"` in the projects where you want to use this package and it will be used instead.
-Done in 0.10s
-
-# Secondly, in the source directory, use the link just created.
-> cd src
-> yarn link "markdown-wasm"
-yarn link v1.22.5
-success Using linked package for "markdown-wasm".
-Done in 0.08s.
-
-# Check if you successfully created the yarn link.
-> cd node_modules
-> ls -la | grep '^l'
--------------------------------------------------------
-lrwxrwxrwx    1 mina mina     46 Oct 26 18:57 markdown-wasm -> [PATH_TO_THE_LINK]/.config/yarn/link/markdown-wasm
--------------------------------------------------------
-```
-
-
-
-<a id="dev-run"></a>
-### 2-1. Run
-
-```shell
-yarn start
-```
-
-Runs a React app in development mode.  
-http://localhost:3000
 
 
 
 <a id="what"></a>
-## 3. What I Did
+## 2. What I Did
 
 
 <a id="what-tricks"></a>
-### 3-1. Tricks
+### 2-1. Tricks
 
 These are the essential tricks...
 
@@ -125,8 +61,9 @@ These are the essential tricks...
 - Use of [babel-plugin-bundled-import-meta](https://github.com/cfware/babel-plugin-bundled-import-meta) to support `import.meta` syntax.
 
 
+
 <a id="what-actual-work"></a>
-### 3-2. Actual Work
+### 2-2. Actual Work
 
 Rather than explaining the details in length,
 I thought it would be easier to illustrate actual work I did.
@@ -405,6 +342,78 @@ I no longer have to import React components using relative path, but now using a
 ```
 NODE_PATH=src/
 ```
+
+
+
+<a id="dev"></a>
+## 3. Development
+
+**IMPORTANT: When you install, you need to build the WASM, and create a yarn link.**
+
+
+<a id="dev-install"></a>
+### 3-1. Install
+
+(1) You first need to `yarn install`.
+
+```shell
+> git clone https://github.com/minagawah/wasm-pack-react-markdown-example.git
+> cd wasm-pack-react-markdown-example
+> yarn install
+```
+
+(2) Then, **you need to build the WASM.**
+
+```shell
+> yarn build:wasm
+```
+
+the above simply runs `sh ./build.sh markdown-wasm`
+
+
+(3) Finally, **you need to create a symlink (yarn link).**
+
+```shell
+# First, create a yarn link in the built directory.
+> cd wasm/markdown-wasm
+> yarn link
+
+yarn link v1.22.5
+warning package.json: No license field
+warning package.json: No license field
+success Registered "markdown-wasm".
+info You can now run `yarn link "markdown-wasm"` in the projects where you want to use this package and it will be used instead.
+Done in 0.10s
+
+# Secondly, in the source directory, use the link just created.
+> cd src
+> yarn link "markdown-wasm"
+yarn link v1.22.5
+success Using linked package for "markdown-wasm".
+Done in 0.08s.
+
+# Check if you successfully created the yarn link.
+> cd node_modules
+> ls -la | grep '^l'
+-------------------------------------------------------
+lrwxrwxrwx    1 mina mina     46 Oct 26 18:57 markdown-wasm -> [PATH_TO_THE_LINK]/.config/yarn/link/markdown-wasm
+-------------------------------------------------------
+```
+
+
+
+<a id="dev-run"></a>
+### 3-1. Run
+
+```shell
+yarn start
+```
+
+Runs a React app in development mode.  
+http://localhost:3000
+
+
+
 
 
 <a id="license"></a>
