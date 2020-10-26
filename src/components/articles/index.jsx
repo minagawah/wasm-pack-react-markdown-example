@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import init, { render_markdown } from 'markdown-wasm';
 
-import { ArticleContext } from 'contexts/article_context';
-import { Loading } from 'components/loading';
+import { ArticleContext } from '../../contexts/article_context';
+import { Loading } from '../../components/loading';
 
 import { Item } from './item';
 

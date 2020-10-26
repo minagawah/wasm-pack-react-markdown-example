@@ -6,10 +6,10 @@ import {
 } from 'react-router-dom';
 import logo from './logo.svg';
 
-import { Home } from 'components/home';
-import { Experiments } from 'components/experiments';
+import { Home } from './components/home';
+import { Experiments } from './components/experiments';
 
-import 'styles.css';
+import './styles.css';
 
 export const App = () => (
   <Router>
