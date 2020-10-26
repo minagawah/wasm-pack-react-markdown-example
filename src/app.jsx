@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import logo from './logo.svg';
 
 import { Home } from './components/home';
@@ -15,16 +11,16 @@ export const App = () => (
   <Router>
     <div className="app">
       <header>
-        <Link to='/'>
+        <Link to="/">
           <img src={logo} className="logo" alt="logo" />
         </Link>
-        <Link to='/'>Top</Link>
-        <Link to='/experiments'>Experiments</Link>
+        <Link to="/">Top</Link>
+        <Link to="/experiments">Experiments</Link>
       </header>
 
       <div className="container">
-        <Route exact path='/' component={Home} />
-        <Route path='/experiments' component={Experiments} />
+        <Route exact path="/" component={Home} />
+        <Route path="/experiments" component={Experiments} />
       </div>
     </div>
   </Router>

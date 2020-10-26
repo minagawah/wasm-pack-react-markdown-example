@@ -9,24 +9,25 @@ const MOCK_ARTICLES = [
 ### markdown-wasm
 - Just a wrapper of [comrak](https://crates.io/crates/comrak).
 - Use \`dangerouslySetInnerHTML\` in your React app.
-- **Hope you like it**`
+- **Hope you like it**`,
 ];
 
-const mockArticles = () => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(MOCK_ARTICLES);
-  }, 200);
-});
+const mockArticles = () =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve(MOCK_ARTICLES);
+    }, 200);
+  });
 
 const reducer = (state, action) => {
   switch (action.type) {
-  case 'RELOADED': {
-    return {
-      data: [...state.data, ...action.payload]
-    };
-  }
-  default:
-    throw new Error();
+    case 'RELOADED': {
+      return {
+        data: [...state.data, ...action.payload],
+      };
+    }
+    default:
+      throw new Error();
   }
 };
 
@@ -37,13 +38,13 @@ export const ArticleContextProvider = props => {
 
   const dispatchProxy = useCallback(async action => {
     switch (action.type) {
-    case 'RELOAD_ARTICLES': {
-      const payload = await mockArticles();
-      dispatch({ type: 'RELOADED', payload });
-      break;
-    }
-    default:
-      dispatch(action);
+      case 'RELOAD_ARTICLES': {
+        const payload = await mockArticles();
+        dispatch({ type: 'RELOADED', payload });
+        break;
+      }
+      default:
+        dispatch(action);
     }
   }, []);
 
@@ -53,4 +54,3 @@ export const ArticleContextProvider = props => {
     </ArticleContext.Provider>
   );
 };
-
