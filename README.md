@@ -85,8 +85,8 @@ success Using linked package for "markdown-wasm".
 Done in 0.08s.
 
 # Check if you successfully created the yarn link.
-$ cd node_modules
-$ ls -la | grep '^l'
+> cd node_modules
+> ls -la | grep '^l'
 -------------------------------------------------------
 lrwxrwxrwx    1 mina mina     46 Oct 26 18:57 markdown-wasm -> [PATH_TO_THE_LINK]/.config/yarn/link/markdown-wasm
 -------------------------------------------------------
