@@ -1,6 +1,6 @@
 {
   "name": "wasm-pack-react-markdown-example",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "Use wasm-pack to handle markdown in React app",
   "main": "index.js",
@@ -47,7 +47,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "4.0.0",
     "react-wasm-bridge": "https://github.com/SpiderOak/react-wasm-bridge"
   },
   "devDependencies": {
