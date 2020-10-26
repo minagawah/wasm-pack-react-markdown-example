@@ -57,7 +57,7 @@ This is just a wrapper of [comrak](https://crates.io/crates/comrak). When given 
 (2) Then, **you need to build the WASM.**
 
 ```shell
-yarn build:wasm
+> yarn build:wasm
 ```
 
 the above simply runs `sh ./build.sh markdown-wasm`
@@ -67,8 +67,8 @@ the above simply runs `sh ./build.sh markdown-wasm`
 
 ```shell
 # First, create a yarn link in the built directory.
-$ cd wasm/markdown-wasm
-$ yarn link
+> cd wasm/markdown-wasm
+> yarn link
 
 yarn link v1.22.5
 warning package.json: No license field
@@ -78,8 +78,8 @@ info You can now run `yarn link "markdown-wasm"` in the projects where you want 
 Done in 0.10s
 
 # Secondly, in the source directory, use the link just created.
-$ cd src
-$ yarn link "markdown-wasm"
+> cd src
+> yarn link "markdown-wasm"
 yarn link v1.22.5
 success Using linked package for "markdown-wasm".
 Done in 0.08s.
