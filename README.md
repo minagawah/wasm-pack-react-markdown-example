@@ -15,10 +15,10 @@ Use wasm-pack to handle markdown in React app
 
 ![screenshot](screenshot.jpg "Screenshot")
 
-
-**Updates**  
-2020.10.26  
-- Using `babel-plugin-bundled-import-meta` to replace `@open-wc/webpack-import-meta-loader`
+**IMPORTANT:**  
+Please note **THIS PROOJECT IS RELATIVELY OLD**.  
+If you are looking for the latest configurations for Rust and Webpack,  
+check out my [perlin-experiment](https://github.com/minagawah/perlin-experiment).
 
 <a id="about"></a>
 ## 1. About
